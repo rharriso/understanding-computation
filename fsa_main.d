@@ -1,5 +1,6 @@
 import std.stdio;
 import std.conv;
+import std.typecons;
 import std.algorithm;
 
 class FAState {
@@ -85,10 +86,10 @@ class DFA {
 
 
 void main(){
-    auto ruleBook = new DFARuleBook;
-    auto state1 = new FAState(1);
-    auto state2 = new FAState(2);
-    auto state3 = new FAState(3);
+    auto ruleBook = scoped!DFARuleBook;
+    auto state1 = scoped!FAState(1);
+    auto state2 = scoped!FAState(2);
+    auto state3 = scoped!FAState(3);
 
     ruleBook.addRule(state1, 'a', state2);
     ruleBook.addRule(state1, 'b', state1);
@@ -97,6 +98,6 @@ void main(){
     ruleBook.addRule(state3, 'a', state2);
     ruleBook.addRule(state3, 'b', state1);
 
-    auto dfa = new DFA(ruleBook, state1);
+    auto dfa = scoped!DFA(ruleBook, state1);
     dfa.readString("abbabbaaabbaaabab");
 }
