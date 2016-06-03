@@ -60,6 +60,30 @@ class DFARuleBook {
     }
 }
 
+class DFA {
+    FAState currentState;
+    DFARuleBook ruleBook;
+
+    this (DFARuleBook rb, FAState startState){
+        currentState = startState;
+        ruleBook = rb;
+    }
+
+    void readChar(char character) {
+        auto oldState = currentState;
+        currentState = ruleBook.nextState(currentState, character);
+        writeln(oldState.inspect~" --("~character~")--> "~currentState.inspect);
+    }
+
+    void readString(string str) {
+        foreach(char c; str){
+            readChar(c);
+        }
+    }
+}
+
+
+
 void main(){
     auto ruleBook = new DFARuleBook;
     auto state1 = new FAState(1);
@@ -71,8 +95,8 @@ void main(){
     ruleBook.addRule(state2, 'a', state3);
     ruleBook.addRule(state2, 'b', state2);
     ruleBook.addRule(state3, 'a', state2);
-    ruleBook.addRule(state3, 'a', state2);
+    ruleBook.addRule(state3, 'b', state1);
 
-    writeln(ruleBook.nextState(state1, 'a').inspect);
-    writeln(ruleBook.nextState(state1, 'b').inspect);
+    auto dfa = new DFA(ruleBook, state1);
+    dfa.readString("abbabbaaabbaaabab");
 }
